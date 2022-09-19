@@ -32,6 +32,7 @@ TARGET_OTA_ASSERT_DEVICE := A7000plus
 TARGET_BOOTLOADER_BOARD_NAME := A7000-a_PLUS_S3
 
 # File systems
+BOARD_HAS_NO_REAL_SDCARD := true
 BOARD_HAS_LARGE_FILESYSTEM := true
 #BOARD_RECOVERYIMAGE_PARTITION_SIZE := 16777216 # This is the maximum known partition size, but it can be higher, so we just omit it
 BOARD_SYSTEMIMAGE_PARTITION_TYPE := ext4
