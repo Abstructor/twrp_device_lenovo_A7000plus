@@ -1,0 +1,1 @@
+# twrp_device_lenovo_A7000plus
