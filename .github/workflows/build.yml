@@ -1,0 +1,50 @@
+name: Build
+on: [workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      -
+        name: Setup droid-builder
+        run: docker pull fr3akyphantom/droid-builder:latest
+      -
+        name: Prepare environment
+        run: |
+          cd $HOME && mkdir twrp
+          sudo apt install -y aria2 zstd xz-utils
+          aria2c -x16 -s8 --console-log-level=error --summary-interval=0 "https://github.com/PhantomZone54/twrp_sources_norepo/releases/download/v3.4.0-20201103/MinimalOmniRecovery-twrp-6.0-norepo-20201103.tzst" -o twrp.tzst || wget -q --show-progress --progress=bar:force "${TWRP_SOURCE}" -O twrp.tzst
+          tar --zstd -xf twrp.tzst --directory $HOME/twrp/ && rm twrp.tzst
+      -
+        name: Build
+        run: |
+          cd $HOME/twrp/ && git clone https://github.com/Socketlike/twrp_device_lenovo_A7000plus.git device/LENOVO/aio_ap
+          rm -rf bootable/recovery && git clone https://github.com/omnirom/android_bootable_recovery -b android-6.0 --depth 1 bootable/recovery
+          docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/builder/twrp/:rw,z" -v "${HOME}/.ccache:/srv/ccache:rw,z" fr3akyphantom/droid-builder bash << EOF
+          cd /home/builder/twrp/
+          source build/envsetup.sh
+          BUILD_FLAVOR="eng"
+          lunch omni_aio_ap-${BUILD_FLAVOR}
+          make -j$(nproc --all) recoveryimage
+          exit
+          EOF
+      -
+        name: Finalize
+        run: |
+          export version=$(cat bootable/recovery/variables.h | grep "define TW_MAIN_VERSION_STR" | cut -d '"' -f2)
+          cp $HOME/twrp/out/target/product/aio_ap/recovery.img $HOME/twrp/TWRP-$version-aio_ap-$(date +"%Y%m%d").img
+          cd $HOME/twrp/
+      -
+        name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "$HOME/twrp/*.img"
+          tag: release
+          replacesArtifacts: true
