@@ -1,12 +1,4 @@
-#
-# Copyright (C) 2022 The Android Open Source Project
-# Copyright (C) 2022 SebaUbuntu's TWRP device tree generator
-#
-# SPDX-License-Identifier: Apache-2.0
-#
-
-LOCAL_PATH := $(call my-dir)
-
-ifeq ($(TARGET_DEVICE),A7000plus)
-include $(call all-subdir-makefiles,$(LOCAL_PATH))
+ifneq ($(filter aio_ap,$(TARGET_DEVICE)),)
+LOCAL_PATH := device/LENOVO/aio_ap
+include $(call all-makefiles-under,$(LOCAL_PATH))
 endif
