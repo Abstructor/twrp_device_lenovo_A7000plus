@@ -20,6 +20,8 @@ jobs:
       -
         name: Prepare environment
         run: |
+          sudo chown -R $HOME $USER
+          chmod a+rwx $HOME
           cd $HOME && mkdir twrp
           sudo apt install -y aria2 zstd xz-utils
           aria2c -x16 -s8 --console-log-level=error --summary-interval=0 "https://github.com/PhantomZone54/twrp_sources_norepo/releases/download/v3.4.0-20201103/MinimalOmniRecovery-twrp-6.0-norepo-20201103.tzst" -o twrp.tzst || wget -q --show-progress --progress=bar:force "${TWRP_SOURCE}" -O twrp.tzst
