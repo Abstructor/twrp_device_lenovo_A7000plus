@@ -21,7 +21,6 @@ jobs:
         name: Prepare environment
         run: |
           cd $HOME && mkdir twrp
-          sudo apt install -y aria2 zstd xz-utils
           aria2c -x16 -s8 --console-log-level=error --summary-interval=0 "https://github.com/PhantomZone54/twrp_sources_norepo/releases/download/v3.4.0-20201103/MinimalOmniRecovery-twrp-6.0-norepo-20201103.tzst" -o twrp.tzst || wget -q --show-progress --progress=bar:force "${TWRP_SOURCE}" -O twrp.tzst
           tar --zstd -xf twrp.tzst --directory $HOME/twrp/ && rm twrp.tzst
       -
@@ -29,7 +28,7 @@ jobs:
         run: |
           cd $HOME/twrp/ && git clone https://github.com/Socketlike/twrp_device_lenovo_A7000plus.git device/LENOVO/aio_ap
           rm -rf bootable/recovery && git clone https://github.com/omnirom/android_bootable_recovery -b android-6.0 --depth 1 bootable/recovery
-          sudo docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/builder/twrp/:rw,z" -v "${HOME}/.ccache:/srv/ccache:rw,z" fr3akyphantom/droid-builder bash << EOF
+          sudo docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/builder/twrp/:rw,z" -v "${HOME}/.ccache:/srv/ccache:rw,z" fr3akyphantom/droid-builder sudo -s bash << EOF
           cd $HOME/twrp/
           source build/envsetup.sh
           lunch omni_aio_ap-eng
