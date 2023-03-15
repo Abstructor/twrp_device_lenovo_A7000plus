@@ -29,8 +29,8 @@ jobs:
         run: |
           cd $HOME/twrp/ && git clone https://github.com/Socketlike/twrp_device_lenovo_A7000plus.git device/LENOVO/aio_ap
           rm -rf bootable/recovery && git clone https://github.com/omnirom/android_bootable_recovery -b android-6.0 --depth 1 bootable/recovery
-          docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/$(USER)/twrp/:rw,z" -v "${HOME}/.ccache:/srv/ccache:rw,z" fr3akyphantom/droid-builder bash << EOF
-          cd /home/$USER/twrp/
+          docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):$HOME/twrp/:rw,z" -v "${HOME}/.ccache:/srv/ccache:rw,z" fr3akyphantom/droid-builder bash << EOF
+          cd $HOME/twrp/
           source build/envsetup.sh
           lunch omni_aio_ap-eng
           make -j$(nproc --all) recoveryimage
