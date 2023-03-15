@@ -1,4 +1,4 @@
-TLOCAL_PATH := device/LENOVO/aio_ap
+LOCAL_PATH := device/LENOVO/aio_ap
 
 TARGET_BOARD_PLATFORM := mt6752
 TARGET_NO_BOOTLOADER := true
