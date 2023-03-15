@@ -51,7 +51,7 @@ BOARD_KERNEL_BASE := 0x40078000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x03f88000 --tags_offset 0x0df88000
 
-TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/recovery/boot/etc/recovery.fstab
+TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/recovery/root/etc/recovery.fstab
 
 TARGET_BOARD_SUFFIX := _64
 TARGET_USES_64_BIT_BINDER := true
